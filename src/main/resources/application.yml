@@ -1,0 +1,31 @@
+spring:
+  thymeleaf:
+    encoding: utf-8
+    cache: false
+    content-type: text/html
+  datasource:
+    url: jdbc:pivotal:greenplum://118.190.71.69:2345;DatabaseName=mymalldb
+    driver-class-name: com.pivotal.jdbc.GreenplumDriver
+    #url: jdbc:postgresql://118.190.71.69:2345/mymalldb?useSSL=false
+    #driver-class-name: org.postgresql.Driver
+    username: gpadmin
+    password: gpadmin
+    tomcat:
+      max-idle: 10
+      max-wait: 10000
+      min-idle: 5
+      initial-size: 5
+      validation-query: SELECT 1
+      test-on-borrow: false
+      test-while-idle: true
+      time-between-eviction-runs-millis: 18800
+      jdbc-interceptors: ConnectionState;SlowQueryReport(threshold=0)
+server:
+  session:
+    timeout: 1800
+  tomcat:
+    uri-encoding: UTF-8
+  port: 8080
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true

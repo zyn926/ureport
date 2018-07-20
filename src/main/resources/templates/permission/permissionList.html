@@ -1,0 +1,484 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/head :: head">
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-xs-12">
+            <div style="margin-bottom: 10px;">
+                <span id="addBtn" class="btn btn-sm btn-primary">新增</span>
+            </div>
+
+            <table id="treeTable" class="table table-hover table-bordered"></table>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                    &times;
+                </button>
+                <h4 class="modal-title" id="myModalLabel">
+                    新增权限
+                </h4>
+            </div>
+            <div class="modal-body">
+                <form class="form-horizontal" role="form" id="perForm">
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right"> 类型 </label>
+                        <div class="col-sm-5">
+                            <label class="radio-inline">
+                                <input type="radio" name="perType" value="0" checked="checked"/>应用
+                            </label>
+                            <label class="radio-inline">
+                                <input type="radio" name="perType" value="1"/>报表
+                            </label>
+                            <!--<input type="text" id="perType" name="perType" class="form-control" />-->
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group" id="reportDiv" style="display: none;">
+                        <label class="col-sm-3 control-label no-padding-right" for="report"> 报表 </label>
+                        <div class="col-sm-6">
+                            <select class="form-control" id="report" disabled="disabled">
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <input type="hidden" name="perId" id="perId"/>
+                        <label class="col-sm-3 control-label no-padding-right" for="perName"> 名称 </label>
+                        <div class="col-sm-6">
+                            <input type="text" id="perName" name="perName" class="form-control" />
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="icon"> 图标 </label>
+                        <div class="col-sm-6">
+                            <input id="icon" name="icon" class="form-control" value=""/>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="perUrl"> 地址 </label>
+                        <div class="col-sm-6">
+                            <input type="text" id="perUrl" name="perUrl" class="form-control" value="#" placeholder="默认‘#’" />
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="fidText"> 上级目录 </label>
+                        <div class="col-sm-6">
+                            <input readonly="readonly" style="cursor: pointer;" type="text" id="fidText" name="fidText" class="form-control" placeholder="根节点"/>
+                            <a id="treeRemove" title="根节点" class="glyphicon glyphicon-home btn" style="pointer-events: auto;position: absolute;padding: 3px 2px;color: brown;right: -3px;"/>
+                            <input type="hidden" id="fid" name="fid" value="0"/>
+                            <div id="zTreeModel" style="z-index: 9999;display: none;position: absolute;background: #FFF;border:solid 1px #6e8bde;min-height: 100px;max-height: 150px;overflow: auto;" >
+                                <ul id="tree" class="ztree" style="width:200px; overflow:auto;"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="space-4"></div>
+                    <div class="form-group">
+                        <label class="col-sm-3 control-label no-padding-right" for="description"> 描述 </label>
+                        <div class="col-sm-6">
+                            <input  id="description" name="description" class="form-control"/>
+                        </div>
+                    </div>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                </button>
+                <button type="button" class="btn btn-primary" id="submitBtn">
+                    提交
+                </button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal -->
+</div>
+
+<div th:include="/common/js :: js"></div>
+<script type="text/javascript">
+    //<![CDATA[
+    $(function () {
+
+        loadTable();
+        var fontIconPicker;
+        $.getJSON("/assets/icon.json",function (result) {
+            fontIconPicker = $('#icon').fontIconPicker({
+                source: result,
+                //searchSource: result,
+                hasSearch:false,
+                allCategoryText: "全部",
+                theme: 'fip-bootstrap',
+                emptyIconValue: 'none'
+            });
+        });
+
+        function loadTable(){
+
+            var $table = $("#treeTable");
+            $table.bootstrapTable({
+                url:'/permission/getPerList',
+                striped:true,
+                sidePagenation:'server',
+                idField:'perId',
+                treeShowField: 'perName',
+                parentIdField: 'fid',
+                clickToSelect: true,
+                columns:[
+
+                    {
+                        field:'perName',
+                        title:'名称'
+
+                    },{
+                        field:'perUrl',
+                        title:'地址'
+                    },{
+                        field:'icon',
+                        title:'图标',
+                        formatter:function(value){
+                            return '<i class="'+value+'"></i>';
+                        }
+                    },{
+                        field:'description',
+                        title:'描述'
+                    },{
+                        title: '操作',
+                        field: 'perId',
+                        events: 'operateEvents',
+                        formatter: function (value) {
+                            var html = '<span class="btn btn-xs btn-info editPer" data-id='+value+' >编辑</span>';
+                            html += '　<span class="btn btn-xs btn-danger deletePer" data-id='+value+' >删除</span>';
+                            return html;
+                        }
+                    }
+                ],
+                onLoadSuccess: function(result) {
+                    $table.treegrid({
+                        initialState: 'collapsed',//收缩
+                        indentation:'20',
+                        treeColumn: 0,//指明第几列数据改为树形
+                        expanderExpandedClass: 'glyphicon glyphicon-triangle-bottom',
+                        expanderCollapsedClass: 'glyphicon glyphicon-triangle-right',
+                        onChange: function() {
+                            $table.bootstrapTable('resetWidth');
+                        }
+                    });
+                }
+            });
+        }
+        window.operateEvents = {
+            "click .editPer":function (e,value,row,index) {
+                $('#perForm').data("bootstrapValidator").resetForm();
+                $.ajax({
+                    url : "/permission/selectById",
+                    data : {perId:value},
+                    success:function(result){
+                        $("input[name='perType']").removeAttr("checked");
+                        $("input[name='perType'][value='"+result.perType+"']").attr("checked","checked");
+                        $("#perForm")[0].reset();
+                        $("#myModalLabel").text("修改权限");
+                        $("#perId").val(result.perId);
+                        $("#perName").val(result.perName);
+                        $("#perUrl").val(result.perUrl);
+                        $("#icon").val(result.icon);
+                        $("#fid").val(result.fid);
+                        $("#fidText").val(result.parentName);
+                        $("#description").val(result.description);
+                        if(result.perType == 1){
+                            getReport();
+                            var url = result.perUrl;
+                            $("#reportDiv").show("fast");
+                            $("#report").val(url.substring(url.indexOf("reportName=")+11));
+                            $("#report").removeAttr("disabled");
+                            $("#perUrl").attr("readonly","readonly");
+                        }else if(result.perType == 0){
+                            $("#reportDiv").hide("fast");
+                            $("#report").attr("disabled","disabled");
+                            $("#perUrl").removeAttr("readonly");
+                        }
+                        fontIconPicker.refreshPicker();
+                        $("#myModal").modal();
+                    }
+                });
+            },
+            "click .deletePer":function (e,value,row,index) {
+                if(confirm("确定要删除此权限？")){
+                    $.ajax({
+                        url : "/permission/selectChildById",
+                        data : {perId : value},
+                        success:function(result){
+                            if(result.status == 1){
+                                if(confirm("此权限下有子权限，是否全部删除？")){
+                                    deletePer(value);
+                                }
+                            }else{
+                                deletePer(value);
+                            }
+                        }
+                    });
+                }else{
+                    return;
+                }
+            }
+        };
+        clickEvent();
+        function clickEvent() {
+            $("#addBtn").unbind("click").click(function() {
+                $('#perForm').data("bootstrapValidator").resetForm();
+                $("input[name='perType']").removeAttr("checked");
+                $("input[name='perType'][value=0]").attr("checked","checked");
+                $("#perForm")[0].reset();
+                $("#perId").val("");
+                $("#fid").val("0");
+                $("#reportDiv").hide("fast");
+                $("#report").attr("disabled","disabled");
+                $("#perUrl").val("#").removeAttr("readonly");
+                $.fn.zTree.destroy();
+                $("#zTreeModel").css("display","none");
+                $("#myModalLabel").text("新增权限");
+                fontIconPicker.refreshPicker();
+                $("#myModal").modal();
+            });
+
+            $("#fidText").unbind("click").click(function(){
+                var modelDisplay = $("#zTreeModel").css("display");
+                var fid = $("#fid").val();
+                if('none' == modelDisplay){
+                    loadZtree(fid);
+                    $("#zTreeModel").show();
+                }else if("block" == modelDisplay){
+                    $("#zTreeModel").hide();
+                }
+            });
+
+            $("#treeRemove").unbind("click").click(function(){
+                $("#fidText").val("");
+                $("#fid").val("0");
+                $("#zTreeModel").hide();
+            });
+
+            $("#submitBtn").unbind("click").click(function () {
+                $("#perForm").bootstrapValidator('validate');//提交验证
+                var validate = $('#perForm').data('bootstrapValidator').isValid();
+                if (validate) {
+                    var title = "新增权限";
+                    var boolean;
+                    if($("#perId").val()){
+                        title = "更新权限";
+                        boolean = false;
+                    }else{
+                        title = "新增权限";
+                        boolean = true;
+                    }
+                    addAndUpdate(boolean,function (data) {
+                        $('#myModal').modal('hide');
+                        $("#treeTable").bootstrapTable('refresh',{url:"/permission/getPerList"});
+                        showMessage(title, data.msg, true);
+                    }, function (data) {
+                        showMessage(title, data.msg, false);
+                    });
+                }
+            });
+
+            $("[name='perType']").change(function () {
+                if($(this).val() == 0){
+                    $("#reportDiv").hide("fast");
+                    $("#report").attr("disabled","disabled");
+                    var oldUrl = $("#perUrl").val();
+                    $("#perUrl").val(oldUrl).removeAttr("readonly");
+                }else{
+                    getReport();
+                    var reportName = $("#report").val();
+                    $("#perUrl").val("ureport/preview?_u=database:"+reportName+".ureport.xml").attr("readonly","readonly");
+                    $("#reportDiv").show("fast");
+                    $("#report").removeAttr("disabled");
+                }
+            });
+            
+            $("#report").change(function () {
+                $("#perUrl").val("ureport/preview?_u=database:"+$(this).val()+".ureport.xml").attr("readonly","readonly");
+            })
+
+
+        }
+        
+        function getReport() {
+            $.ajax({
+                url: "/permission/getReport",
+                type: "GET",
+                async: false,
+                success:function (result) {
+                    var option = "";
+                    $.each(result,function (i,item) {
+                        if(i == 0){
+                            option += "<option value='"+item.name+"' selected='selected'>"+item.name+"</option>";
+                        }else{
+                            option += "<option value='"+item.name+"'>"+item.name+"</option>";
+                        }
+                        $("#report").html(option);
+                    });
+                }
+            });
+        }
+
+        function addAndUpdate(isCreate, successCallback, failCallback){
+            $.ajax({
+                url : isCreate ? "/permission/save" : "/permission/update",
+                data: $("#perForm").serializeArray(),
+                type : "post",
+                success:function(result){
+                    if(result.status == 0){
+                        if (successCallback) {
+                            successCallback(result);
+                        }
+                    }else{
+                        if (failCallback) {
+                            failCallback(result);
+                        }
+                    }
+                }
+            });
+        }
+
+        function deletePer(perId){
+            $.ajax({
+                url : "/permission/deleteById",
+                data : {perId : perId},
+                type : "post",
+                success:function(result){
+                    if (result.status == 0) {
+                        showMessage("删除权限", "操作成功", true);
+                        $("#treeTable").bootstrapTable('refresh',{url:"/permission/getPerList"});
+                    } else {
+                        showMessage("删除权限", result.msg, false);
+                    }
+                }
+            });
+        }
+
+        function icon() {
+            $.getJSON("/assets/icon.json",function (result) {
+                $('#icon').fontIconPicker({
+                    source: result,
+                    //searchSource: result,
+                    hasSearch:false,
+                    allCategoryText: "全部",
+                    theme: 'fip-bootstrap',
+                    emptyIconValue: ''
+                });
+            });
+        }
+
+        function loadZtree(fid) {
+            var setting = {
+                view: {
+                    dblClickExpand: true,
+                    showLine: true,
+                    selectedMulti: false
+                },
+                data: {
+                    key : {
+                        title : "name",
+                        name : "name"
+                    },
+                    simpleData: {
+                        enable: true,
+                        idKey: "id",
+                        pIdKey: "pId",
+                        rootPId: "0"
+                    }
+                },
+                callback: {
+                    onClick: zTreeOnClick
+                }
+            };
+
+            function zTreeOnClick(event, treeId, treeNode) {
+                var perId = $("#perId").val();
+                if(perId){
+                    if(perId == treeNode.id){
+                        alert("不能选择自己为父节点！");
+                        return;
+                    }
+                }
+                $("#fidText").val(treeNode.name);
+                $("#fid").val(treeNode.id);
+                $("#zTreeModel").hide();
+            }
+            var treeObj = $.fn.zTree.getZTreeObj("tree");
+            if(treeObj != null){
+                if(fid != 0){
+                    var node = treeObj.getNodesByParam("id", fid, null)[0];
+                    if (node != null) {
+                        treeObj.selectNode(node, false,true);
+                    }else{
+                        treeObj.refresh();
+                        treeObj.expandAll(false);
+                    }
+                }
+            }else{
+                $.getJSON("/permission/getPerTree",function(result){
+                    $.fn.zTree.init($("#tree"), setting, result);
+                    //var treeObj = $.fn.zTree.getZTreeObj("tree");
+                    if(fid != 0) {
+                        var node = treeObj.getNodesByParam("id", fid, null)[0];
+                        if (node != null) {
+                            treeObj.selectNode(node, false, true);
+                        } else {
+                            treeObj.refresh();
+                            treeObj.expandAll(false);
+                        }
+                    }
+                });
+            }
+        }
+
+        //表单验证;
+        $("#perForm").bootstrapValidator({
+            message: 'This value is not valid',
+            feedbackIcons: {
+                valid: 'glyphicon glyphicon-ok',
+                invalid: 'glyphicon glyphicon-remove',
+                validating: 'glyphicon glyphicon-refresh'
+            },
+            excluded:[":disabled"],
+            fields: {
+                perName: {
+                    message: '权限名验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '权限名不能为空'
+                        },
+                    }
+                },
+                perUrl: {
+                    message: '地址验证失败',
+                    validators: {
+                        notEmpty: {
+                            message: '地址不能为空'
+                        },
+                        /*regexp: {
+                            regexp: /^[a-zA-Z0-9_\#\\\/]+$/,
+                            message: '地址只能由字母、数字、下划线、/、\\或#组成。'
+                        }*/
+                    }
+                }
+            }
+        });
+    });
+    //]]>
+</script>
+</body>
+</html>

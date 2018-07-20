@@ -1,0 +1,65 @@
+<div th:fragment="js" xmlns:th="http://www.springframework.org/schema/mvc">
+    <!-- 全局js -->
+    <!--<script th:src="@{/assets/js/jquery-2.0.3.min.js}" ></script>-->
+    <script th:src="@{/assets/js/bootstrap.min.js}" ></script>
+    <!--<script th:src="@{/assets/js/plugins/jqueryPlug/jquery.metisMenu.js}" ></script>-->
+    <!--<script th:src="@{/assets/js/plugins/jqueryPlug/jquery.slimscroll.min.js}" ></script>-->
+    <!--<script th:src="@{/assets/js/plugins/layer/layer.js}" ></script>-->
+    <script th:src="@{/assets/js/plugins/pace/pace.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/mustache/mustache.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/jqueryPlug/jquery.gritter.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/bootatrspPlug/bootstrapValidator.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/bootatrspPlug/bootstrap-select/bootstrap-select.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/bootatrspPlug/bootstrap-select/i18n/defaults-zh_CN.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/ztree/jquery.ztree.core.min.js}"></script>
+    <script th:src="@{/assets/js/plugins/ztree/jquery.ztree.excheck.min.js}"></script>
+
+    <script th:src="@{/assets/js/plugins/jqueryPlug/jquery.fonticonpicker.min.js}"></script>
+
+    <script th:src="@{/assets/js/plugins/bootatrspPlug/bootstrap-table.js}"></script>
+    <script th:src="@{/assets/js/plugins/bootatrspPlug/bootstrap-table-treegrid.js}"></script>
+    <script th:src="@{/assets/js/plugins/jqueryPlug/jquery.treegrid.min.js}"></script>
+
+    <!-- 自定义js -->
+    <!--<script th:src="@{/assets/js/common/generateMenu.js}" ></script>
+    <script th:src="@{/assets/js/common/common.js}" ></script>
+    <script th:src="@{/assets/js/common/contabs.js}" ></script>-->
+
+
+    <script type="text/javascript">
+        function showMessage(title, msg, isSuccess) {
+            if (!isSuccess) {
+                msg = msg || '';
+            } else {
+                msg = msg || '操作成功'
+            }
+            $.gritter.add({
+                title: title,
+                text: msg != '' ? msg : "服务器处理异常, 建议刷新页面来保证数据是最新的",
+                time: '',
+                class_name: (isSuccess ? 'gritter-success' : 'gritter-warning')
+            });
+        }
+
+        //时间格式化
+        Date.prototype.Format = function (fmt) {
+            var o = {
+                "M+": this.getMonth() + 1, //月份
+                "d+": this.getDate(), //日
+                "h+": this.getHours(), //小时
+                "m+": this.getMinutes(), //分
+                "s+": this.getSeconds(), //秒
+                "q+": Math.floor((this.getMonth() + 3) / 3), //季度
+                "S": this.getMilliseconds() //毫秒
+            };
+            if (/(y+)/.test(fmt)) fmt = fmt.replace(RegExp.$1, (this.getFullYear() + "").substr(4 - RegExp.$1.length));
+            for (var k in o)
+                if (new RegExp("(" + k + ")").test(fmt)) fmt = fmt.replace(RegExp.$1, (RegExp.$1.length == 1) ? (o[k]) : (("00" + o[k]).substr(("" + o[k]).length)));
+            return fmt;
+        }
+    </script>
+
+
+
+
+</div>

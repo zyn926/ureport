@@ -1,0 +1,123 @@
+<div th:fragment="copy" xmlns:th="http://www.w3.org/1999/xhtml" xmlns:shiro="http://www.w3.org/1999/html">
+    <!--右侧头部-->
+    <!--<div class="row border-bottom">
+        <nav class="navbar navbar-static-top" role="navigation" style="margin-bottom: 0">
+            <div class="navbar-header"><a class="navbar-minimalize minimalize-styl-2 btn btn-info " href="#"><i class="fa fa-bars"></i> </a>
+            </div>
+            <ul class="nav navbar-top-links navbar-right">
+                <li class="dropdown" onblur="this.style.background='red';">
+                    <a class="dropdown-toggle count-info" data-toggle="dropdown" href="#">
+                        <i class="fa fa-user-circle fa-lg"></i>
+                        <span class=""><shiro:principal property="userName"/></span>
+                    </a>
+                    <ul class="dropdown-menu dropdown-messages dropdown-arrow">
+                        <li>
+                            <div id="changePass" class="text-center link-block">
+                                <i class="fa fa-key fa-lg" style="margin-right: 10px;"></i>
+                                <span style="font-size: 14px;font-weight: bold;">修改密码</span>
+                            </div>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>-->
+    <!--右侧头部结束-->
+
+    <div class="modal fade" id="changePassModal" tabindex="-1" role="dialog" aria-labelledby="changePassLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                        &times;
+                    </button>
+                    <h4 class="modal-title" id="changePassLabel">
+                        修改密码
+                    </h4>
+                </div>
+                <form id="passFrom" class="form-horizontal" role="form">
+                <div class="modal-body">
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="oldPass"> 原密码 </label>
+                            <div class="col-sm-5">
+                                <input type="text" onfocus="this.type='password'" id="oldPass" name="oldPass" class="form-control" value="" placeholder="请输入原密码"/>
+                                <span id="checkPass" style="margin-left: 5px;top: 5px;position: absolute;"></span>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="newPass"> 新密码 </label>
+                            <div class="col-sm-5">
+                                <input type="text" onfocus="this.type='password'" id="newPass" name="newPass" class="form-control" placeholder="请输入新密码"/>
+                            </div>
+                        </div>
+                        <div class="space-4"></div>
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label no-padding-right" for="againPass"> 再次确定密码 </label>
+                            <div class="col-sm-5">
+                                <input type="text" onfocus="this.type='password'" id="againPass" name="againPass" class="form-control" placeholder="请确认新密码"/>
+                                <span id="errorAgain" style="color: brown;margin-left: 5px;top: 5px;position: absolute;"></span>
+                            </div>
+                        </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">关闭
+                    </button>
+                    <button type="button" disabled="disabled" id="submitBtn" class="btn btn-primary">
+                        确定
+                    </button>
+                </div>
+                </form>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal -->
+    </div>
+
+    <div class="row content-tabs">
+        <button class="roll-nav roll-left J_tabLeft"><i class="fa fa-backward"></i></button>
+        <nav class="page-tabs J_menuTabs">
+            <div class="page-tabs-content">
+                <a href="javascript:;" class="active J_menuTab" data-id="">首页</a>
+            </div>
+        </nav>
+        <button class="roll-nav roll-right J_tabRight"><i class="fa fa-forward"></i>
+        </button>
+        <div class="btn-group roll-nav roll-right">
+            <button class="dropdown J_tabClose" data-toggle="dropdown">关闭操作<span class="caret"></span>
+
+            </button>
+            <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                <li class="J_tabShowActive"><a>定位当前选项卡</a>
+                </li>
+                <li class="divider"></li>
+                <li class="J_tabCloseAll"><a>关闭全部选项卡</a>
+                </li>
+                <li class="J_tabCloseOther"><a>关闭其他选项卡</a>
+                </li>
+            </ul>
+        </div>
+        <!--<a href="/logout" class="roll-nav roll-right J_tabExit"><i class="fa fa fa-sign-out"></i> 退出</a>-->
+        <div class="btn-group roll-nav roll-right J_tabExit">
+            <button class="dropdown J_tabClose" style="text-align: left;" data-toggle="dropdown">
+                <i class="fa fa-cog"></i>系统<span class="caret"></span>
+            </button>
+            <ul role="menu" class="dropdown-menu dropdown-menu-right">
+                <li>
+                    <a id="changePass" style="font-size: 12px;font-weight: bold;text-align: center;">
+                        <i class="fa fa-key " style="margin-right: 10px;"></i>修改密码
+                    </a>
+                </li>
+                <li>
+                    <a href="/logout" style="font-size: 12px;font-weight: bold;text-align: center;">
+                        <i class="fa fa-sign-out " style="margin-right: 10px;"></i>退出
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!--右侧内容-->
+    <div class="row J_mainContent" id="content-main">
+        <iframe class="J_iframe" width="100%" height="100%" src="" frameborder="0" data-id="" seamless="seamless"></iframe>
+    </div>
+</div>

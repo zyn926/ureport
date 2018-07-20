@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/head :: head">
+
+</head>
+<body class="gray-bg">
+<div class="wrapper wrapper-content animated fadeInRight">
+    <div class="row">
+        <div class="col-xs-12">
+            <input type="hidden" id="reportVal" th:value='${report}'/>
+            <div id="report"></div>
+        </div>
+    </div>
+</div>
+<div th:include="/common/js :: js"></div>
+<script type="text/javascript">
+    //<![CDATA[
+    $(function () {
+        var report = $("#reportVal").val();
+        $("#report").html(report);
+    });
+    //]]>
+</script>
+</body>
+</html>

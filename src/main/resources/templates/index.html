@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+
+<head th:include="/common/head :: head">
+</head>
+<body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
+<div id="wrapper">
+    <!--左侧导航开始-->
+    <nav class="navbar-default navbar-static-side" role="navigation" th:include="/common/leftMenu :: copy"></nav>
+    <!--左侧导航结束-->
+
+    <!--右侧部分开始-->
+    <div id="page-wrapper" class="gray-bg dashbard-1" th:include="/common/right :: copy"></div>
+    <!--右侧部分结束-->
+</div>
+
+<!--部分js普通页面中不需要引入-->
+<!--<script th:src="@{/assets/js/jquery-2.0.3.min.js}" ></script>-->
+<script th:src="@{/assets/js/bootstrap.min.js}" ></script>
+<script th:src="@{/assets/js/common/generateMenu.js}" ></script>
+<script th:src="@{/assets/js/common/common.js}" ></script>
+<script th:src="@{/assets/js/plugins/jqueryPlug/jquery.metisMenu.js}" ></script>
+<script th:src="@{/assets/js/plugins/layer/layer.js}" ></script>
+<script th:src="@{/assets/js/common/contabs.js}" ></script>
+<script th:src="@{/assets/js/plugins/bootatrspPlug/bootstrapValidator.min.js}"></script>
+<!--<script th:src="@{/assets/js/plugins/pace/pace.min.js}"></script>-->
+<script th:src="@{/assets/js/plugins/jqueryPlug/jquery.slimscroll.min.js}" ></script>
+<script type="text/javascript">
+    //<![CDATA[
+        $(function () {
+
+           $(".nav-arrow span").click(function () {
+                if($(this).hasClass("fa-chevron-circle-left")){
+                    $(this).removeClass("fa-chevron-circle-left").addClass("fa-chevron-circle-right");
+                }else{
+                    $(this).removeClass("fa-chevron-circle-right").addClass("fa-chevron-circle-left");
+                }
+            });
+
+
+            $("#changePass").click(function () {
+                $('#passFrom').data("bootstrapValidator").resetForm();
+                $("#passFrom")[0].reset();
+                $("#changePassModal").modal();
+            });
+
+            $("#passFrom input").keyup(function () {
+                var validate = $('#passFrom').data('bootstrapValidator').isValid();
+                if(validate){
+                    $("#submitBtn").removeAttr("disabled");
+                }else{
+                    $("#submitBtn").attr("disabled","disabled");
+                }
+            });
+
+            $("#submitBtn").click(function () {
+                var pass = $("#newPass").val();
+                    $.ajax({
+                        url:'/auUser/changePass',
+                        type:'POST',
+                        data:{pass:pass},
+                        success:function(result){
+                            if(result){
+                                alert("修改成功");
+                                location.href = "login.html";
+                            }else{
+                                alert("修改失败");
+                            }
+                        }
+                    });
+            });
+
+            $("#passFrom").bootstrapValidator({
+                message: 'This value is not valid',
+                feedbackIcons: {
+                    valid: 'glyphicon glyphicon-ok',
+                    invalid: 'glyphicon glyphicon-remove',
+                    validating: 'glyphicon glyphicon-refresh'
+                },
+                //excluded:[":disabled"],
+                fields: {
+                    oldPass: {
+                        message: '原密码验证失败',
+                        trigger: 'blur',
+                        validators: {
+                            notEmpty: {
+                                message: '原密码不能为空'
+                            },
+                            remote: {
+                                message: '原密码错误',
+                                url: '/auUser/checkPass',
+                                type: 'POST',
+                                delay: '5000'
+                            }
+                        }
+                    },
+                    newPass: {
+                        message: '密码验证失败',
+                        validators: {
+                            notEmpty: {
+                                message: '密码不能为空'
+                            }
+                        }
+                    },
+                    againPass: {
+                        message: '密码验证失败',
+                        validators: {
+                            notEmpty: {
+                                message: '密码不能为空'
+                            },
+                            identical: {
+                                field: 'newPass',
+                                message: '两次输入密码不相同'
+                            }
+                        }
+                    }
+                }
+            });
+
+        });
+    //]]>
+</script>
+</body>
+
+</html>
