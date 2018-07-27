@@ -25,7 +25,7 @@ server:
     timeout: 1800
   tomcat:
     uri-encoding: UTF-8
-  port: 8080
+  port: 8082
 mybatis:
   configuration:
     map-underscore-to-camel-case: true

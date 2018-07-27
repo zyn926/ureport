@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/common/head :: head">
+<head th:include="common/head :: head">
 </head>
 <body onload="loadTopWindow()" class="gray-bg">
 <div class="middle-box text-center">
@@ -10,9 +10,10 @@
         <h2 class="form-signin-heading">管理平台</h2>
 
         <label class="sr-only">用户名</label>
-        <input type="text" id="inputEmail" class="form-control" placeholder="Email/Telephone" name="username"></input>
+        <input type="text" id="inputEmail" class="form-control" placeholder="Email/Telephone" name="userName"></input>
         <label class="sr-only">密码</label>
         <input type="password" id="inputPassword" class="form-control" placeholder="Password" name="password"></input>
+        <input type="checkbox" name="rememberMe" />记住我
         <div class="checkbox" style="color: red;"><h4 th:text="${msg}"></h4></div>
         <button class="btn btn-lg btn-primary btn-block" type="submit">登 陆</button>
     </form>

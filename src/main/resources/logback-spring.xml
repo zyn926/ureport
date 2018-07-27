@@ -19,12 +19,12 @@
         <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%p][%c{40}][%t] %m%n</pattern>
         </encoder>
-        <File>/urport/logs/info.log</File>
+        <File>/ureportLog/logs/info.log</File>
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
             <!--<fileNamePattern>/Users/a1234/Documents/work/kaoqin/info.%d.log</fileNamePattern>-->
-            <fileNamePattern>/urport/logs/info.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>/ureportLog/logs/info.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -36,13 +36,13 @@
         <encoder>
             <pattern>[%d{yyyy-MM-dd HH:mm:ss.SSS}][%p][%c{40}][%t] %m%n</pattern>
         </encoder>
-        <File>/urport/logs/error.log</File>
+        <File>/ureportLog/logs/error.log</File>
 
         <!--滚动策略-->
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <!--路径-->
             <!--<fileNamePattern>/Users/a1234/Documents/work/kaoqin/error.%d.log</fileNamePattern>-->
-            <fileNamePattern>/urport/logs/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
+            <fileNamePattern>/ureportLog/logs/error.log.%d{yyyy-MM-dd}.gz</fileNamePattern>
         </rollingPolicy>
     </appender>
 

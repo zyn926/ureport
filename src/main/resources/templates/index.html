@@ -1,16 +1,16 @@
 <!DOCTYPE html>
 <html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/common/head :: head">
+<head th:include="common/head :: head">
 </head>
 <body class="fixed-sidebar full-height-layout gray-bg" style="overflow:hidden">
 <div id="wrapper">
     <!--左侧导航开始-->
-    <nav class="navbar-default navbar-static-side" role="navigation" th:include="/common/leftMenu :: copy"></nav>
+    <nav class="navbar-default navbar-static-side" role="navigation" th:include="common/leftMenu :: copy"></nav>
     <!--左侧导航结束-->
 
     <!--右侧部分开始-->
-    <div id="page-wrapper" class="gray-bg dashbard-1" th:include="/common/right :: copy"></div>
+    <div id="page-wrapper" class="gray-bg dashbard-1" th:include="common/right :: copy"></div>
     <!--右侧部分结束-->
 </div>
 
@@ -28,7 +28,6 @@
 <script type="text/javascript">
     //<![CDATA[
         $(function () {
-
            $(".nav-arrow span").click(function () {
                 if($(this).hasClass("fa-chevron-circle-left")){
                     $(this).removeClass("fa-chevron-circle-left").addClass("fa-chevron-circle-right");

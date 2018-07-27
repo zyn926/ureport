@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
 
-<head th:include="/common/head :: head">
+<head th:include="common/head :: head">
 
 </head>
 <body class="gray-bg">
@@ -140,8 +140,8 @@
     </div>
 </div>
 
-<div th:include="/common/js :: js"></div>
-<div th:include="/common/page :: js"></div>
+<div th:include="common/js :: js"></div>
+<div th:include="common/page :: js"></div>
 
 <script id="userListTemplate" type="x-tmpl-mustache">
 {{#userList}}
