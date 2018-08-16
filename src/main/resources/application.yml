@@ -4,12 +4,14 @@ spring:
     cache: false
     content-type: text/html
   datasource:
-    url: jdbc:pivotal:greenplum://118.190.71.69:2345;DatabaseName=mymalldb
-    driver-class-name: com.pivotal.jdbc.GreenplumDriver
+    #url: jdbc:pivotal:greenplum://118.190.71.69:2345;DatabaseName=mymalldb
+    #driver-class-name: com.pivotal.jdbc.GreenplumDriver
     #url: jdbc:postgresql://118.190.71.69:2345/mymalldb?useSSL=false
     #driver-class-name: org.postgresql.Driver
-    username: gpadmin
-    password: gpadmin
+    url: jdbc:mysql:localhost/basedata?characterEncoding=UTF-8&useSSL=false&allowMultiQueries=true
+    driver-class-name: com.mysql.jdbc.Driver
+    username: root
+    password: root
     tomcat:
       max-idle: 10
       max-wait: 10000

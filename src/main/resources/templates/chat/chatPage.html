@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="zh_CN" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no"/>
+
+    <link rel="stylesheet" th:href="@{/assets/css/bootstrap.min.css}"/>
+
+    <script th:src="@{/assets/js/jquery-2.0.3.min.js}" ></script>
+    <style type="text/css">
+        input#chat {
+            /*width: 410px*/
+        }
+        #console-container {
+            /*width: 400px;*/
+        }
+
+        #console {
+            border: 1px solid #CCCCCC;
+            border-right-color: #999999;
+            border-bottom-color: #999999;
+            height: 170px;
+            overflow-y: scroll;
+            padding: 5px;
+            width: 100%;
+        }
+
+        #console p {
+            padding: 0;
+            margin: 0;
+        }
+
+    </style>
+</head>
+<body>
+
+<div class="col-xs-12">
+    <div id="console-container">
+        <div id="console"></div>
+        在线人数：<p id="count" style="display: inline-block;"></p>
+    </div>
+
+    <div style="margin-top: 10px;">
+        <input type="text" placeholder="按回车键发送" id="chat"/>
+        <span class="btn btn-success btn-xs" id="chatBtn">发送</span>
+    </div>
+
+</div>
+<script type="text/javascript">
+    //<![CDATA[
+    $(function () {
+        var Console = {};
+
+        function rand(){
+            return parseInt(Math.random()*1000000+1);
+        }
+
+        Console.log = (function(result) {
+            var messageLab = $("#console");
+            var p = document.createElement('p');
+            p.style.wordWrap = 'break-word';
+            if(result.isSelf){
+                p.style.textAlign = 'right';
+            }
+            if(result.message){
+                p.innerHTML = result.message;
+            }else if(result.joinInfo){
+                /*messageLab.append("" +
+                    "<span style='text-align: center;color: #ccc;font-size: 10px;display: block;'>"+result.date+"</span>" +
+                    "<span style='text-align: center;color: #ccc;font-size: 10px;display: block;'>"+result.joinInfo+"</span>");*/
+                $("#count").text(result.count)
+            }
+            messageLab.append(p);
+            while (messageLab.children().length > 25) {
+                $("#console p:first-child").remove();
+            }
+            messageLab.scrollTop(messageLab[0].scrollHeight);
+        });
+
+        var Chat = {};
+
+        Chat.socket = null;
+
+        Chat.connect = (function(host) {
+            if ('WebSocket' in window) {
+                Chat.socket = new WebSocket(host);
+            } else if ('MozWebSocket' in window) {
+                Chat.socket = new MozWebSocket(host);
+            } else {
+                Console.log('Error: WebSocket is not supported by this browser.');
+                return;
+            }
+
+            Chat.socket.onopen = function() {
+                Console.log('');
+                $("#chat").keydown(function (event) {
+                    if(event.keyCode == 13){
+                       Chat.sendMessage();
+                    }
+                });
+                $("#chatBtn").click(function () {
+                    Chat.sendMessage();
+                });
+            };
+
+            Chat.socket.onclose = function() {
+                document.getElementById('chat').onkeydown = null;
+                Console.log('Info: WebSocket closed.');
+            };
+
+            Chat.socket.onmessage = function(message) {
+                var result = $.parseJSON(message.data);
+                Console.log(result);
+            };
+        });
+
+        Chat.initialize = function() {
+            Chat.connect('ws://'+window.location.host+'/chatMessage/'+rand());
+        };
+
+        Chat.sendMessage = (function() {
+            var message = $("#chat").val();
+            if (message != '') {
+                Chat.socket.send(message);
+                $("#chat").val("").focus();
+            }
+        });
+
+        Chat.initialize();
+    });
+
+    //]]>
+</script>
+</body>
+
+</html>
