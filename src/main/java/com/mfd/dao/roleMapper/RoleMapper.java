@@ -11,7 +11,7 @@ import java.util.Map;
 @Mapper
 public interface RoleMapper {
 
-    @Select("select role_id,role_name,description from au_role order by role_name desc limit #{page.pageSize} offset #{page.offset}")
+    @Select("select role_id,role_name,description from au_role order by role_name desc limit #{page.offset}, #{page.pageSize}")
     List<RoleInfo> getPageList(@Param("page")PageQuery page);
 
     @Select("select count(role_id) from au_role")
@@ -20,9 +20,8 @@ public interface RoleMapper {
     @Delete("delete from au_role where role_id = #{roleId}")
     int delete(@Param("roleId") Integer roleId);
 
-    //@Options(useGeneratedKeys=true, keyProperty="role_id")
-
-    @SelectKey(statement="select last_value from au_role_role_id_seq",keyProperty = "roleId",before=false, resultType=Integer.class)
+    @Options(useGeneratedKeys=true, keyProperty="role_id")
+    /*@SelectKey(statement="select last_value from au_role_role_id_seq",keyProperty = "roleId",before=false, resultType=Integer.class)*/
     @Insert("insert into au_role(role_name,description) values (#{roleName},#{description})")
     int insert(RoleInfo role);
 
@@ -62,7 +61,7 @@ public interface RoleMapper {
      * @param roleId
      * @return
      */
-    @Select("select string_agg(cast(per_id as text),',') from au_role_permission where role_id = #{roleId}")
+    @Select("select group_concat(per_id) from au_role_permission where role_id = #{roleId}")
     String selectPerIdsByRole(@Param("roleId") Integer roleId);
 
     /**

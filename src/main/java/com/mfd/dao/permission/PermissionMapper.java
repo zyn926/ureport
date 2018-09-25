@@ -71,7 +71,7 @@ public interface PermissionMapper {
      * @param idList
      * @return
      */
-    @Select("<script> select string_agg(per_name) from au_permission where per_id in <foreach item = \"item\" index = \"index\" collection = \"idList\" open = \"(\" separator = \",\" close = \")\" >#{item}</foreach> </script>")
+    @Select("<script> select group_concat(per_name) from au_permission where per_id in <foreach item = \"item\" index = \"index\" collection = \"idList\" open = \"(\" separator = \",\" close = \")\" >#{item}</foreach> </script>")
     String selectPerName(@Param("idList") List<Integer> idList);
 
     @Select(" select substring(rep_name from 1 for position('ureport.xml' in rep_name)-2) as name from ureport_file order by up_time desc")

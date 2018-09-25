@@ -27,10 +27,7 @@ public interface AuUserInfoMapper {
     @Select("select t.per_id as id,t.fid as pid,t.per_name as name,t.icon,t.per_url as url from au_permission t left join au_role_permission t1 on t.per_id=t1.per_id left join au_user_role t2 on t2.role_id=t1.role_id where t2.user_id = #{userId} group by t.fid,t.per_id,t.per_name,t.icon,t.per_url order by t.per_name ")
     List<Map<Object,Object>> getMenu(@Param("userId") Integer userId);
 
-    /*
-        用户维护
-     */
-    @Select("select u.user_id,u.user_name,u.name,u.create_time,t.role_names from au_user u left join (select string_agg(r.role_name,',') as role_names,aur.user_id from au_user_role aur left join au_role r on aur.role_id=r.role_id group by aur.user_id) t on u.user_id=t.user_id order by create_time desc limit #{page.pageSize} offset #{page.offset} ")
+    @Select("select u.user_id,u.user_name,u.name,u.create_time,t.role_names from au_user u left join (select group_concat(r.role_name) as role_names,aur.user_id from au_user_role aur left join au_role r on aur.role_id=r.role_id group by aur.user_id) t on u.user_id=t.user_id order by create_time desc limit #{page.offset}, #{page.pageSize} ")
     List<AuUserInfo> getPageList(@Param("page") PageQuery page);
 
     /**
@@ -54,8 +51,8 @@ public interface AuUserInfoMapper {
      * @param user
      * @return
      */
-    //@Options(useGeneratedKeys=true, keyProperty="userId")
-    @SelectKey(statement="select last_value from au_user_user_id_seq",keyProperty = "userId",before=false, resultType=Integer.class)
+    @Options(useGeneratedKeys=true, keyProperty="userId")
+    /*@SelectKey(statement="select last_value from au_user_user_id_seq",keyProperty = "userId",before=false, resultType=Integer.class)*/
     @Insert("insert into au_user (user_name,name,password,create_time) values (#{userName},#{name},#{password},now())")
     int insert(AuUserInfo user);
 
@@ -80,7 +77,7 @@ public interface AuUserInfoMapper {
      * @param userId
      * @return
      */
-    @Select("select string_agg(cast(r.role_id as text),',') as \"roleIds\",string_agg(r.role_name,',') as \"roleNames\",u.user_name as \"userName\",u.name from au_user u left join au_user_role aur on aur.user_id=u.user_id left join au_role r on r.role_id=aur.role_id where u.user_id = #{userId} group by u.user_name,u.name")
+    @Select("select group_concat(r.role_id) as roleIds,group_concat(r.role_name,',') as roleNames,u.user_name as userName,u.name from au_user u left join au_user_role aur on aur.user_id=u.user_id left join au_role r on r.role_id=aur.role_id where u.user_id = #{userId} group by u.user_name,u.name")
     Map selectRoleByUser(@Param("userId") String userId);
 
     /**

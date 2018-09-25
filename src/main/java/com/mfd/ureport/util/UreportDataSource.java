@@ -14,7 +14,7 @@ import java.sql.SQLException;
 
 @EnableAutoConfiguration
 @Configuration
-@ConfigurationProperties(prefix = "datasource")
+//@ConfigurationProperties(prefix = "datasource")
 @Slf4j
 public class UreportDataSource implements BuildinDatasource{
 

@@ -13,7 +13,7 @@ public interface UreportFileMapper {
      * @param name 报表名称
      * @return
      */
-    @Select("select count(*) from ureport_file where rep_name = #{name}")
+    @Select("select count(rep_id) from ureport_file where rep_name = #{name}")
     int checkExistByName(@Param("name") String name);
 
     /**
@@ -28,7 +28,7 @@ public interface UreportFileMapper {
      * 查询全部报表
      * @return
      */
-    @Select("select rep_id,rep_name,rep_content,create_time,up_time from ureport_file order by create_time desc")
+    @Select("select rep_name,up_time from ureport_file order by create_time desc")
     List<UreportFileEntity> queryReportFileList();
 
     /**
