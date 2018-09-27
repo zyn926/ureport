@@ -3,6 +3,8 @@ spring:
     encoding: utf-8
     cache: false
     content-type: text/html
+    #解决严格模板问题
+    mode: LEGACYHTML5
   datasource:
     #url: jdbc:pivotal:greenplum://118.190.71.69:2345;DatabaseName=mymalldb
     #driver-class-name: com.pivotal.jdbc.GreenplumDriver
@@ -31,3 +33,7 @@ server:
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
+#解决activiti的验证问题
+security:
+  basic:
+    enabled: false

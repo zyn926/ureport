@@ -44,6 +44,7 @@
            overflowToDisk="false"
            statistics="true">
     </cache>
+
      <cache name="authorizationCache"
            maxEntriesLocalHeap="20000"
            eternal="false"

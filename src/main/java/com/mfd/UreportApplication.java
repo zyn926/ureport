@@ -6,12 +6,14 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.web.servlet.ServletRegistrationBean;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.ImportResource;
 
 @SpringBootApplication
 
 @EnableAutoConfiguration
 @ImportResource("classpath:ureport-context.xml")
+@ComponentScan({"com.mfd", "org.activiti"})
 public class UreportApplication {
 
     public static void main(String[] args) {
